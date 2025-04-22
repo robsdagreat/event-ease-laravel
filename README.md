@@ -18,7 +18,7 @@ Laravel requirements as stated in the official documentation
 Installation
 
 ### Clone the repository:
-git clone https://github.com/your-organization/eventease-backend.git
+git clone https://github.com/robsdagreat/event-ease-laravel.git
 cd eventease-backend
 
 ### Install dependencies:
