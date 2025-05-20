@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Venue extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'description',
@@ -15,8 +18,6 @@ class Venue extends Model
         'state',
         'country',
         'postal_code',
-        'latitude',
-        'longitude',
         'venue_type',
         'capacity',
         'rating',
@@ -36,9 +37,7 @@ class Venue extends Model
         'pricing' => 'array',
         'special_offers' => 'array',
         'is_available' => 'boolean',
-        'rating' => 'decimal:2',
-        'latitude' => 'decimal:8',
-        'longitude' => 'decimal:8',
+        'rating' => 'float',
     ];
 
     public function events()

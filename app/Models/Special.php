@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Special extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'title',
         'description',
-        'venue_id',
-        'venue_name',
+        'establishment_name',
+        'establishment_type',
+        'location',
         'start_date',
         'end_date',
         'type',
@@ -18,6 +22,9 @@ class Special extends Model
         'image_url',
         'is_active',
         'terms',
+        'contact_email',
+        'contact_phone',
+        'website',
     ];
 
     protected $casts = [
@@ -25,11 +32,6 @@ class Special extends Model
         'end_date' => 'datetime',
         'is_active' => 'boolean',
         'terms' => 'array',
-        'discount_percentage' => 'decimal:2',
+        'discount_percentage' => 'float',
     ];
-
-    public function venue()
-    {
-        return $this->belongsTo(Venue::class);
-    }
 }

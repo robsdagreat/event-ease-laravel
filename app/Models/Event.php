@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'description',
@@ -14,7 +17,7 @@ class Event extends Model
         'event_type',
         'venue_id',
         'venue_name',
-        'user_id',
+        'firebase_user_id',
         'organizer_name',
         'is_public',
         'expected_attendees',
@@ -31,11 +34,21 @@ class Event extends Model
         'end_time' => 'datetime',
         'is_public' => 'boolean',
         'tags' => 'array',
-        'ticket_price' => 'decimal:2',
+        'ticket_price' => 'float',
     ];
 
     public function venue()
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    public function eventType()
+    {
+        return $this->belongsTo(EventType::class, 'event_type', 'name');
+    }
+
+    public function firebaseUser()
+    {
+        return $this->belongsTo(FirebaseUser::class, 'firebase_user_id', 'uid');
     }
 }
