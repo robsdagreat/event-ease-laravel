@@ -9,8 +9,9 @@ class FirebaseUserSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('firebase_users')->insert([
-            'uid' => 'user123', 
+        DB::table('firebase_users')->updateOrInsert([
+            'uid' => 'user123',
+        ], [
             'email' => 'test@example.com',
             'display_name' => 'Test User',
             'created_at' => now(),
