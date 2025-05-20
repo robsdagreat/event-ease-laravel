@@ -222,4 +222,18 @@ class EventController extends Controller
 
         return $query->with('venue')->get();
     }
+
+    /**
+     * Get events by Firebase user ID.
+     *
+     * @param  string  $firebaseUserId
+     * @return \Illuminate\Http\Response
+     */
+    public function byUser($firebaseUserId)
+    {
+        return Event::where('firebase_user_id', $firebaseUserId)
+            ->with('venue')
+            ->orderBy('start_time', 'desc')
+            ->get();
+    }
 }

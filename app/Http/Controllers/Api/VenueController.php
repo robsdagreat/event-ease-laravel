@@ -201,4 +201,17 @@ class VenueController extends Controller
             ->orderBy('rating', 'desc')
             ->get();
     }
+
+    /**
+     * Get venues by Firebase user ID.
+     *
+     * @param  string  $firebaseUserId
+     * @return \Illuminate\Http\Response
+     */
+    public function byUser($firebaseUserId)
+    {
+        return Venue::where('firebase_user_id', $firebaseUserId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
 }
