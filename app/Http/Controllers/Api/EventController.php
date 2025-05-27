@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class EventController extends Controller
 {
@@ -27,26 +29,43 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-            'event_type' => 'required|string',
-            'venue_id' => 'required|exists:venues,id',
-            'venue_name' => 'required|string',
-            'firebase_user_id' => 'required|string',
-            'organizer_name' => 'required|string',
-            'is_public' => 'boolean',
-            'expected_attendees' => 'required|integer|min:1',
-            'image_url' => 'nullable|url',
-            'status' => 'required|in:upcoming,ongoing,completed,cancelled',
-            'ticket_price' => 'required|numeric|min:0',
-            'tags' => 'nullable|array',
-            'contact_email' => 'nullable|email',
-            'contact_phone' => 'nullable|string',
-        ]);
+        Log::info('EventController@store: Request received.');
+        Log::info('EventController@store: Validating request data.');
 
+        if ($request->expectsJson()) {
+            Log::info('EventController@store: Request expects JSON.');
+        } else {
+            Log::warning('EventController@store: Request does NOT expect JSON.');
+        }
+
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'start_time' => 'required|date',
+                'end_time' => 'required|date|after:start_time',
+                'event_type' => 'required|string',
+                'venue_id' => 'required|exists:venues,id',
+                'venue_name' => 'required|string',
+                'firebase_user_id' => 'required|string',
+                'organizer_name' => 'required|string',
+                'is_public' => 'boolean',
+                'expected_attendees' => 'required|integer|min:1',
+                'image_url' => 'nullable|url',
+                'status' => 'required|in:upcoming,ongoing,completed,cancelled',
+                'ticket_price' => 'required|numeric|min:0',
+                'tags' => 'nullable|array',
+                'contact_email' => 'nullable|email',
+                'contact_phone' => 'nullable|string',
+            ]);
+
+        } catch (ValidationException $e) {
+            Log::error('EventController@store: Validation failed.', ['errors' => $e->errors()]);
+            throw $e; // Re-throw the exception so it can be handled by the Exception Handler
+        }
+
+        Log::info('EventController@store: Validation successful.');
+        Log::info('EventController@store: Attempting to create event.');
         return Event::create($validated);
     }
 
@@ -221,5 +240,33 @@ class EventController extends Controller
         }
 
         return $query->with('venue')->get();
+    }
+
+    /**
+     * Get events by Firebase user ID.
+     *
+     * @param  string  $firebaseUserId
+     * @return \Illuminate\Http\Response
+     */
+    public function byUser($firebaseUserId)
+    {
+        return Event::where('firebase_user_id', $firebaseUserId)
+            ->with('venue')
+            ->orderBy('start_time', 'desc')
+            ->get();
+    }
+
+    /**
+     * Get events by user ID (firebase_user_id).
+     *
+     * @param  string  $userId
+     * @return \Illuminate\Http\Response
+     */
+    public function getEventsByUser($userId)
+    {
+        return Event::where('firebase_user_id', $userId)
+            ->with('venue')
+            ->orderBy('start_time', 'desc')
+            ->get();
     }
 }

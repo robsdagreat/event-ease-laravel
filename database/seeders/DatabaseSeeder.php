@@ -25,5 +25,13 @@ class DatabaseSeeder extends Seeder
             SpecialSeeder::class,
             FirebaseUserSeeder::class,
         ]);
+
+        \App\Models\User::firstOrCreate([
+            'email' => 'system@eventease.com',
+        ], [
+            'name' => 'EventEase System',
+            'password' => bcrypt('system_password'), // Change this to a secure password
+            'is_system' => true,
+        ]);
     }
 }
