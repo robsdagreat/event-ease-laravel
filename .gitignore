@@ -19,3 +19,5 @@ yarn-error.log
 
 # Firebase credentials
 /storage/firebase/*.json
+storage/firebase-credentials.json
+storage/firebase/eventease-43d23-firebase-adminsdk-fbsvc-189105fb26.json

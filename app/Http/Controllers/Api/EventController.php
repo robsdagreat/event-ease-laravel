@@ -52,7 +52,7 @@ class EventController extends Controller
                 'is_public' => 'boolean',
                 'expected_attendees' => 'required|integer|min:1',
                 'image_url' => 'nullable|url',
-                'status' => 'required|in:upcoming,ongoing,completed,cancelled',
+                'status' => 'required|in:active,completed,cancelled,upcoming',
                 'ticket_price' => 'required|numeric|min:0',
                 'tags' => 'nullable|array',
                 'contact_email' => 'nullable|email',
@@ -87,8 +87,10 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(Request $request, $id)
     {
+        $event = Event::findOrFail($id);
+
         $validated = $request->validate([
             'name' => 'string|max:255',
             'description' => 'string',

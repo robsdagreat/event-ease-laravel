@@ -65,7 +65,8 @@ class SpecialController extends Controller
         ]);
 
         $special->update($validated);
-        return $special;
+        \Log::info('Validated data:', $validated);
+        return $special->fresh();
     }
 
     public function destroy(Special $special)

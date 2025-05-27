@@ -31,6 +31,12 @@ class Venue extends Model
         'is_available',
     ];
 
+    protected $attributes = [
+        'amenities' => '[]',
+        'images' => '[]',
+        'is_available' => true,
+    ];
+
     protected $casts = [
         'amenities' => 'array',
         'images' => 'array',

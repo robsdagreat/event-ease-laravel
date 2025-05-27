@@ -27,8 +27,8 @@ class VenueController extends Controller
             'venue_type' => 'required|string',
             'capacity' => 'required|integer|min:1',
             'rating' => 'numeric|min:0|max:5',
-            'amenities' => 'required|array',
-            'images' => 'required|array',
+            'amenities' => 'nullable|array',
+            'images' => 'nullable|array',
             'contact_email' => 'nullable|email',
             'contact_phone' => 'nullable|string',
             'website' => 'nullable|url',
@@ -36,6 +36,10 @@ class VenueController extends Controller
             'special_offers' => 'nullable|array',
             'is_available' => 'boolean',
         ]);
+
+        // Ensure amenities and images are arrays
+        $validated['amenities'] = $validated['amenities'] ?? [];
+        $validated['images'] = $validated['images'] ?? [];
 
         return Venue::create($validated);
     }
@@ -70,7 +74,7 @@ class VenueController extends Controller
         ]);
 
         $venue->update($validated);
-        return $venue;
+        return $venue->fresh();
     }
 
     public function destroy(Venue $venue)
